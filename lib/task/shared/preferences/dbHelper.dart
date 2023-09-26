@@ -77,6 +77,17 @@ class DbHelper {
         .update('tasks', makeItTask.toMap(), where: 'id = ?', whereArgs: [id]);
   }
 
+  Future<int> saveCounterVal(SaveCounterValModel saveCounterVal, int id) async {
+    if (_db == null) {
+      await initDB(dbdName);
+    }
+
+    final db = _db!.database;
+
+    return db
+        .update('tasks', saveCounterVal.toMap(), where: 'id = ?', whereArgs: [id]);
+  }
+
   Future<int> deleteTask(int id) async {
     if (_db == null) {
       await initDB(dbdName);

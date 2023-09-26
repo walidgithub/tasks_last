@@ -27,7 +27,6 @@ class TasksByCategory extends StatefulWidget {
 }
 
 class _TasksByCategoryState extends State<TasksByCategory> {
-
   var loadedTasks = [];
 
   int? _done;
@@ -57,7 +56,6 @@ class _TasksByCategoryState extends State<TasksByCategory> {
         loadedTasks[index]['id']);
 
     if (loadedTasks[index]['pinned'] == 1) {
-
       int? idOfTaskDay;
       await DailyTasksCubit.get(context)
           .getIdOfTaskDay(dayOfWeekOfToday, loadedTasks[index]['id'])
@@ -85,8 +83,8 @@ class _TasksByCategoryState extends State<TasksByCategory> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => onBackButtonPressed(context),
-      child: Scaffold(
+        onWillPop: () => onBackButtonPressed(context),
+        child: Scaffold(
           appBar: AppBar(
             backgroundColor: ColorManager.darkPrimary,
             title: Center(
@@ -94,17 +92,18 @@ class _TasksByCategoryState extends State<TasksByCategory> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(widget.arguments.category!.length > 8 &&
-                          int.parse(widget.arguments.countOfItems.toString()) > 99
+                          int.parse(widget.arguments.countOfItems.toString()) >
+                              99
                       ? '${widget.arguments.category!.substring(0, 7)}..'
                       : widget.arguments.category!.length > 10
                           ? '${widget.arguments.category!.substring(0, 7)}..'
                           : widget.arguments.category!),
                   Row(
                     children: [
-                      Text(
-                          int.parse(widget.arguments.countOfItems.toString()) > 99
-                              ? '(+99'
-                              : '(${widget.arguments.countOfItems}'),
+                      Text(int.parse(widget.arguments.countOfItems.toString()) >
+                              99
+                          ? '(+99'
+                          : '(${widget.arguments.countOfItems}'),
                       SizedBox(
                         width: AppConstants.smallDistance,
                       ),
@@ -115,9 +114,11 @@ class _TasksByCategoryState extends State<TasksByCategory> {
               ),
             ),
             leading: Bounceable(
-                duration: Duration(milliseconds: AppConstants.durationOfBounceable),
+                duration:
+                    Duration(milliseconds: AppConstants.durationOfBounceable),
                 onTap: () async {
-                  await Future.delayed(Duration(milliseconds: AppConstants.durationOfDelay));
+                  await Future.delayed(
+                      Duration(milliseconds: AppConstants.durationOfDelay));
 
                   Navigator.of(context).pushReplacementNamed(Routes.mainRoute);
                 },
@@ -133,8 +134,19 @@ class _TasksByCategoryState extends State<TasksByCategory> {
               ),
             ],
           ),
-          body: bodyContent(context)),
-    );
+          body: bodyContent(context),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              Navigator.of(context).pushReplacementNamed(Routes.goToTask,
+                  arguments: GoToTaskArguments(editType: 'Add', id: 0));
+            },
+            backgroundColor: ColorManager.darkPrimary,
+            child: const Icon(Icons.add),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+        ));
   }
 
   Widget bodyContent(BuildContext context) {
@@ -183,7 +195,8 @@ class _TasksByCategoryState extends State<TasksByCategory> {
             child: Column(
               children: [
                 Container(
-                    padding: const EdgeInsets.fromLTRB(AppPadding.p5, AppPadding.p10, AppPadding.p5, AppPadding.p10),
+                    padding: const EdgeInsets.fromLTRB(AppPadding.p5,
+                        AppPadding.p10, AppPadding.p5, AppPadding.p10),
                     child: ListView.builder(
                       scrollDirection: Axis.vertical,
                       itemCount: loadedTasks.length,
@@ -261,19 +274,19 @@ class _TasksByCategoryState extends State<TasksByCategory> {
                           closeOnScroll: false,
                           child: DailyTasks(
                             arguments: DailyTasksArguments(
-                                id: loadedTasks[index]['id'],
-                                wheel: loadedTasks[index]['wheel'],
-                                nestedVal: loadedTasks[index]['nestedVal'],
-                                nested: loadedTasks[index]['nested'],
-                                counterVal: loadedTasks[index]['counterVal'],
-                                counter: loadedTasks[index]['counter'],
-                                description: loadedTasks[index]['description'],
-                                taskName: loadedTasks[index]['taskName'],
-                                time: loadedTasks[index]['time'],
-                                timer: loadedTasks[index]['timer'],
-                                done: loadedTasks[index]['done'],
-                                pinned: loadedTasks[index]['pinned'],
-                                date: widget.arguments.tasksDate,
+                              id: loadedTasks[index]['id'],
+                              wheel: loadedTasks[index]['wheel'],
+                              nestedVal: loadedTasks[index]['nestedVal'],
+                              nested: loadedTasks[index]['nested'],
+                              counterVal: loadedTasks[index]['counterVal'],
+                              counter: loadedTasks[index]['counter'],
+                              description: loadedTasks[index]['description'],
+                              taskName: loadedTasks[index]['taskName'],
+                              time: loadedTasks[index]['time'],
+                              timer: loadedTasks[index]['timer'],
+                              done: loadedTasks[index]['done'],
+                              pinned: loadedTasks[index]['pinned'],
+                              date: widget.arguments.tasksDate,
                             ),
                           ),
                         );

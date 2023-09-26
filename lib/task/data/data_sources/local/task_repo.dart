@@ -10,6 +10,7 @@ abstract class TaskRepository {
   Future<void> deleteTask(int taskId);
   Future<void> updateOldTask(DailyTaskModel dailyTaskModel, int taskId);
   Future<void> toggleDone(MakeTaskDoneModel makeItDone, int taskId);
+  Future<void> saveCounterVal(SaveCounterValModel saveCounterVal, int taskId);
   Future<List<String>> getTasksNames();
   Future<List<String>> getAllCategories();
   Future<DailyTaskModel> showTask(int taskId);
@@ -47,7 +48,7 @@ abstract class TaskRepository {
   Future<void> updateDoneForWeekOfTasks(
       MakeTaskDoneModel updateDoneForWeek, int dayId);
 
-  // Pinned Tasks -----------------------------------------------------------------------
+  // first load -----------------------------------------------------------------------
   Future<void> addFirstLoadRow(FirstLoad firstLoad);
   Future<FirstLoad> fetchFirstLoad(String date);
   Future<void> updateFirstLoad(

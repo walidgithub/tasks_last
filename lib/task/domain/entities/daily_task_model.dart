@@ -88,3 +88,19 @@ class MakeTaskDoneModel {
     return data;
   }
 }
+
+class SaveCounterValModel {
+  int? id;
+  int? counterVal;
+
+  SaveCounterValModel({this.id, this.counterVal});
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["id"] = id;
+    data["counterVal"] = counterVal;
+    return data;
+  }
+}
+
+
+

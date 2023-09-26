@@ -48,6 +48,8 @@ class _DailyTasksState extends State<DailyTasks> {
     }
   }
 
+  int counterVal = 0;
+
   Future<void> executeToggleDone(BuildContext context) async {
     _toggleDone(_done);
 
@@ -63,7 +65,6 @@ class _DailyTasksState extends State<DailyTasks> {
         widget.arguments.id!);
 
     if (widget.arguments.pinned == 1) {
-
       int? idOfTaskDay;
       await DailyTasksCubit.get(context)
           .getIdOfTaskDay(dayOfWeekOfToday, widget.arguments.id!)
@@ -74,6 +75,12 @@ class _DailyTasksState extends State<DailyTasks> {
       DailyTasksCubit.get(context).toggleDoneByDay(
           MakeTaskDoneByDayModel(id: idOfTaskDay, done: _done),
           dayOfWeekOfToday,
+          widget.arguments.id!);
+    }
+
+    if (widget.arguments.counter == 1 || widget.arguments.wheel == 1) {
+      await DailyTasksCubit.get(context).saveCounterVal(
+          SaveCounterValModel(id: widget.arguments.id, counterVal: counterVal),
           widget.arguments.id!);
     }
   }
@@ -152,6 +159,7 @@ class _DailyTasksState extends State<DailyTasks> {
                                                       milliseconds: AppConstants.durationOfDelayForCounter));
                                               setState(() {
                                                 widget.arguments.counterVal = widget.arguments.counterVal! - 1;
+                                                counterVal = widget.arguments.counterVal!;
                                                 if (widget.arguments.counterVal == 0){
                                                   // executeToggleDone(context);
                                                 }
@@ -222,7 +230,9 @@ class _DailyTasksState extends State<DailyTasks> {
                                                 ListWheelScrollView.useDelegate(
                                                     onSelectedItemChanged:
                                                         (value) {
-                                                      setState(() {});
+                                                      setState(() {
+                                                        counterVal = value;
+                                                      });
                                                     },
                                                     perspective: 0.005,
                                                     diameterRatio: 1.2,

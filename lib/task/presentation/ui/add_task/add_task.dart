@@ -933,7 +933,7 @@ class _AddTaskState extends State<AddTask> {
                 _counter
                     ? Container(
                         height: 100.h,
-                        width: 80.w,
+                        width: 85.w,
                         padding: const EdgeInsets.fromLTRB(AppPadding.p10,
                             AppPadding.p0, AppPadding.p10, AppPadding.p0),
                         decoration: BoxDecoration(
@@ -954,7 +954,7 @@ class _AddTaskState extends State<AddTask> {
                             physics: const FixedExtentScrollPhysics(),
                             itemExtent: 30,
                             childDelegate: ListWheelChildBuilderDelegate(
-                                childCount: 100,
+                                childCount: 900,
                                 builder: (context, index) {
                                   return myCounter(index + 1);
                                 })))
