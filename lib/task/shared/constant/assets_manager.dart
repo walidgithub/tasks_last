@@ -11,9 +11,6 @@ class ImageAssets {
   static const String taskslogo = '$imagePath/tasks-logo.png';
   static const String settings = '$imagePath/settings.svg';
   static const String scroll = '$imagePath/scroll.svg';
-  static const String star = '$imagePath/star.svg';
-  static const String share = '$imagePath/share.svg';
-  static const String about = '$imagePath/about.svg';
   static const String folder = '$imagePath/folder.svg';
   static const String follower = '$imagePath/follower.svg';
   static const String changeLangIc = "$imagePath/language.svg";

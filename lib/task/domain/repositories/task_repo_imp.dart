@@ -1,5 +1,4 @@
 import 'package:daily_tasks/task/domain/entities/first_load.dart';
-import 'package:daily_tasks/task/domain/entities/nested_task_model.dart';
 import 'package:daily_tasks/task/domain/entities/notification_by_date_model.dart';
 import 'package:daily_tasks/task/domain/entities/notification_by_day_of_week_model.dart';
 import 'package:daily_tasks/task/domain/entities/task_days_model.dart';
@@ -86,20 +85,6 @@ class TaskRepoImp extends TaskRepository {
       String category, String date) async {
     final res = await _dbHelper.loadDailyTasksByCategory(category, date);
     return res;
-  }
-
-  // Nested Tasks -----------------------------------------------------------------------
-  @override
-  Future<void> addNestedTask(
-      NestedTaskModel nestedTaskModel, TaskDaysModel taskDays) async {
-    await _dbHelper.createNestedTask(nestedTaskModel);
-    await _dbHelper.createTaskDays(taskDays);
-  }
-
-  @override
-  Future<List<NestedTaskModel>> loadNestedTasksById(int taskId) {
-    // TODO: implement getNestedTasks
-    throw UnimplementedError();
   }
 
   // Task Days -----------------------------------------------------------------------

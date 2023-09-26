@@ -3,7 +3,6 @@ import 'package:daily_tasks/task/domain/entities/notification_by_day_of_week_mod
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:daily_tasks/task/domain/entities/first_load.dart';
-import 'package:daily_tasks/task/domain/entities/nested_task_model.dart';
 import 'package:daily_tasks/task/domain/entities/task_days_model.dart';
 import '../../domain/entities/daily_task_model.dart';
 
@@ -32,9 +31,6 @@ class DbHelper {
   Future createDB(Database db, int version) async {
     await db.execute(
         'create table tasks(id integer primary key autoincrement, taskName varchar(15), description varchar(255), category varchar(15), date TEXT NOT NULL, time TEXT NOT NULL, timer integer not null, pinned integer not null, counter integer not null, nested integer not null, wheel integer not null, nestedVal integer, counterVal integer, notifyMe integer not null, done integer not null, specificDate integer not null)');
-
-    await db.execute(
-        'create table nestedTasks(id integer primary key autoincrement, mainTaskId integer, taskName varchar(15), description varchar(255), category varchar(15), date TEXT NOT NULL, time TEXT NOT NULL, timer integer not null, counter integer not null, wheel integer not null, counterVal integer, notifyMe integer not null, done integer not null)');
 
     await db.execute(
         'create table taskDays(id integer primary key autoincrement, category varchar(15), mainTaskId integer, nameOfDay varchar(3), checkedDay integer not null, done integer not null, date TEXT NOT NULL)');
@@ -240,67 +236,6 @@ class DbHelper {
         [date, category]);
 
     return result.map((map) => DailyTaskModel.fromMap(map)).toList();
-  }
-
-  // NestedTask ----------------------------------------------------------------------------------------
-
-  Future<NestedTaskModel> createNestedTask(NestedTaskModel nestedTask) async {
-    final db = _db!.database;
-
-    await db.insert('nestedTasks', nestedTask.toMap());
-
-    return nestedTask;
-  }
-
-  Future<NestedTaskModel> showNestedTask(int id) async {
-    if (_db == null) {
-      await initDB(dbdName);
-    }
-
-    final db = _db!.database;
-
-    final maps =
-        await db.query('nestedTasks', where: 'id = ?', whereArgs: [id]);
-
-    if (maps.isNotEmpty) {
-      return NestedTaskModel.fromMap(maps.first);
-    } else {
-      throw Exception('data not found');
-    }
-  }
-
-  Future<List<NestedTaskModel>> showAllNestedTasks(int mainTaskId) async {
-    if (_db == null) {
-      await initDB(dbdName);
-    }
-
-    final db = _db!.database;
-
-    final result = await db.query('nestedTasks',
-        where: 'mainTaskId = ?', whereArgs: [mainTaskId], orderBy: 'id DESC');
-
-    return result.map((map) => NestedTaskModel.fromMap(map)).toList();
-  }
-
-  Future<int> updateNestedTask(NestedTaskModel nestedTask, int id) async {
-    if (_db == null) {
-      await initDB(dbdName);
-    }
-
-    final db = _db!.database;
-
-    return db.update('nestedTasks', nestedTask.toMap(),
-        where: 'id = ?', whereArgs: [id]);
-  }
-
-  Future<int> deleteNestedTask(int id) async {
-    if (_db == null) {
-      await initDB(dbdName);
-    }
-
-    final db = _db!.database;
-
-    return db.delete('nestedTasks', where: 'id = ?', whereArgs: [id]);
   }
 
   //  TaskDays ----------------------------------------------------------------------------------------

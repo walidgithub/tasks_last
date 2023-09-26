@@ -53,6 +53,19 @@ class _NavBarState extends State<NavBar> {
             },
           ),
           const Divider(),
+          ListTile(
+            leading: SvgPicture.asset(
+              ImageAssets.reports,
+              color: ColorManager.darkBasicOverlay,
+              width: 35,
+            ),
+            title: const Text(AppStrings.allreports,
+                style: TextStyle(fontSize: AppSize.s15)),
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.settings);
+            },
+          ),
+          const Divider(),
         ],
       ),
     );

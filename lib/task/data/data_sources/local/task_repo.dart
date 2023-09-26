@@ -1,6 +1,5 @@
 import '../../../domain/entities/daily_task_model.dart';
 import '../../../domain/entities/first_load.dart';
-import '../../../domain/entities/nested_task_model.dart';
 import '../../../domain/entities/notification_by_date_model.dart';
 import '../../../domain/entities/notification_by_day_of_week_model.dart';
 import '../../../domain/entities/task_days_model.dart';
@@ -24,11 +23,6 @@ abstract class TaskRepository {
   // Daily Tasks -----------------------------------------------------------------------
   Future<List<DailyTaskModel>> loadDailyTasksByCategory(
       String category, String date);
-
-  // Nested Tasks -----------------------------------------------------------------------
-  Future<List<NestedTaskModel>> loadNestedTasksById(int taskId);
-  Future<void> addNestedTask(
-      NestedTaskModel nestedTaskModel, TaskDaysModel taskDays);
 
   // Task Days -----------------------------------------------------------------------
   Future<void> addTaskDay(TaskDaysModel taskDays);
