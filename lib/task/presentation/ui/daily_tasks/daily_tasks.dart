@@ -7,10 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:readmore/readmore.dart';
-import 'package:daily_tasks/task/domain/entities/daily_task_model.dart';
 import 'package:daily_tasks/task/presentation/ui/daily_tasks/widgets.dart';
-
-import '../../../domain/entities/task_days_model.dart';
 import '../../../shared/constant/assets_manager.dart';
 import '../../../shared/constant/constant_values_manager.dart';
 import '../../../shared/constant/padding_margin_values_manager.dart';
@@ -31,58 +28,10 @@ class DailyTasks extends StatefulWidget {
 }
 
 class _DailyTasksState extends State<DailyTasks> {
-
   DateTime today = DateTime.now();
 
   double checkDouble(dynamic value) {
     return 1 / value;
-  }
-
-  int? _done;
-
-  void _toggleDone(value) {
-    if (value == 1) {
-      _done = 0;
-    } else {
-      _done = 1;
-    }
-  }
-
-  int counterVal = 0;
-
-  Future<void> executeToggleDone(BuildContext context) async {
-    _toggleDone(_done);
-
-    String dayOfToday = DateFormat('EEEE').format(today);
-    String dayOfWeekOfToday = dayOfToday.substring(0, 3);
-
-    String originalDate =
-    DateTime.parse(today.toString().split(" ")[0]).toString();
-    String searchByToday = originalDate.replaceFirst(RegExp(' '), 'T');
-
-    await DailyTasksCubit.get(context).toggleDone(
-        MakeTaskDoneModel(id: widget.arguments.id, done: _done),
-        widget.arguments.id!);
-
-    if (widget.arguments.pinned == 1) {
-      int? idOfTaskDay;
-      await DailyTasksCubit.get(context)
-          .getIdOfTaskDay(dayOfWeekOfToday, widget.arguments.id!)
-          .then((value) {
-        idOfTaskDay = value.id;
-      });
-
-      DailyTasksCubit.get(context).toggleDoneByDay(
-          MakeTaskDoneByDayModel(id: idOfTaskDay, done: _done),
-          dayOfWeekOfToday,
-          widget.arguments.id!);
-    }
-
-    if (widget.arguments.counter == 1 || widget.arguments.wheel == 1) {
-      await DailyTasksCubit.get(context).saveCounterVal(
-          SaveCounterValModel(id: widget.arguments.id, counterVal: counterVal),
-          widget.arguments.id!);
-    }
   }
 
   @override
@@ -93,12 +42,14 @@ class _DailyTasksState extends State<DailyTasks> {
         listener: (context, state) {},
         builder: (context, state) {
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppPadding.p8, horizontal: AppPadding.p5),
+            padding: const EdgeInsets.symmetric(
+                vertical: AppPadding.p8, horizontal: AppPadding.p5),
             child: Column(
               children: [
                 Container(
                     // height: 75,
-                    padding: const EdgeInsets.fromLTRB(AppPadding.p0, AppPadding.p8, AppPadding.p0, AppPadding.p10),
+                    padding: const EdgeInsets.fromLTRB(AppPadding.p0,
+                        AppPadding.p8, AppPadding.p0, AppPadding.p10),
                     decoration: (BoxDecoration(
                         color: Colors.white,
                         border:
@@ -117,7 +68,8 @@ class _DailyTasksState extends State<DailyTasks> {
                         Expanded(
                           flex: 7,
                           child: Padding(
-                            padding: const EdgeInsets.only(left: AppPadding.p20),
+                            padding:
+                                const EdgeInsets.only(left: AppPadding.p20),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,37 +83,42 @@ class _DailyTasksState extends State<DailyTasks> {
                                         Text(
                                           widget.arguments.taskName!,
                                           textAlign: TextAlign.left,
-                                          style: TextStyle(fontSize: AppSize.s18.sp),
+                                          style: TextStyle(
+                                              fontSize: AppSize.s18.sp),
                                         ),
                                         widget.arguments.date
-                                            .toString()
-                                            .split(" ")[0]
-                                            .substring(0, 10) ==
-                                            today
-                                                .toString()
-                                                .split(" ")[0]
-                                                .substring(0, 10) ?
-                                        widget.arguments.done == 1
-                                            ? Icon(
-                                                Icons.done,
-                                                color: ColorManager.blueColor,
-                                              )
-                                            : Container() : Container()
+                                                    .toString()
+                                                    .split(" ")[0]
+                                                    .substring(0, 10) ==
+                                                today
+                                                    .toString()
+                                                    .split(" ")[0]
+                                                    .substring(0, 10)
+                                            ? widget.arguments.done == 1
+                                                ? Icon(
+                                                    Icons.done,
+                                                    color:
+                                                        ColorManager.blueColor,
+                                                  )
+                                                : Container()
+                                            : Container()
                                       ],
                                     ),
                                     widget.arguments.counter == 1
                                         ? Bounceable(
                                             duration: Duration(
-                                                milliseconds: AppConstants.durationOfDelayForCounter),
+                                                milliseconds: AppConstants
+                                                    .durationOfDelayForCounter),
                                             onTap: () async {
-                                              await Future.delayed(
-                                                  Duration(
-                                                      milliseconds: AppConstants.durationOfDelayForCounter));
+                                              await Future.delayed(Duration(
+                                                  milliseconds: AppConstants
+                                                      .durationOfDelayForCounter));
                                               setState(() {
-                                                widget.arguments.counterVal = widget.arguments.counterVal! - 1;
-                                                counterVal = widget.arguments.counterVal!;
-                                                if (widget.arguments.counterVal == 0){
-                                                  // executeToggleDone(context);
+                                                if (widget.arguments.counterVal! > 0 && widget.arguments.done == 0) {
+                                                  widget.arguments.counterVal = widget.arguments.counterVal! - 1;
+                                                  // if (widget.arguments.counterVal == 0) {
+                                                  //   widget.arguments.toggleDone!();
+                                                  // }
                                                 }
                                               });
                                             },
@@ -193,11 +150,13 @@ class _DailyTasksState extends State<DailyTasks> {
                                                   const Icon(Icons
                                                       .fingerprint_rounded),
                                                   Text(
-                                                    widget.arguments.counterVal
-                                                        .toString(),
+                                                    widget.arguments
+                                                            .counterVal
+                                                            .toString(),
                                                     textAlign: TextAlign.left,
                                                     style: TextStyle(
-                                                        fontSize: AppSize.s20.sp,
+                                                        fontSize:
+                                                            AppSize.s20.sp,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
@@ -228,16 +187,19 @@ class _DailyTasksState extends State<DailyTasks> {
                                             ),
                                             child:
                                                 ListWheelScrollView.useDelegate(
+                                                    physics:
+                                                        const FixedExtentScrollPhysics(),
+                                                    controller:
+                                                        FixedExtentScrollController(
+                                                            initialItem: 3),
                                                     onSelectedItemChanged:
                                                         (value) {
                                                       setState(() {
-                                                        counterVal = value;
+                                                        widget.arguments.counterVal == value;
                                                       });
                                                     },
                                                     perspective: 0.005,
                                                     diameterRatio: 1.2,
-                                                    physics:
-                                                        const FixedExtentScrollPhysics(),
                                                     itemExtent: 40,
                                                     childDelegate:
                                                         ListWheelChildBuilderDelegate(
@@ -253,14 +215,14 @@ class _DailyTasksState extends State<DailyTasks> {
                                         Text(
                                           widget.arguments.time!,
                                           textAlign: TextAlign.left,
-                                          style: TextStyle(fontSize: AppSize.s15.sp),
+                                          style: TextStyle(
+                                              fontSize: AppSize.s15.sp),
                                         ),
                                         SizedBox(
                                           width: AppConstants.smallDistance,
                                         ),
                                         widget.arguments.timer == 1
-                                            ? const Icon(
-                                                Icons.lock_clock,
+                                            ? const Icon(Icons.lock_clock,
                                                 size: 15)
                                             : Container()
                                       ],
@@ -322,15 +284,17 @@ class _DailyTasksState extends State<DailyTasks> {
                                                     ? 0.0
                                                     : checkDouble(widget
                                                         .arguments.nestedVal),
-                                                duration: Duration(milliseconds: AppConstants.countUp),
+                                                duration: Duration(
+                                                    milliseconds:
+                                                        AppConstants.countUp),
                                                 style: TextStyle(
                                                   fontSize: AppSize.s10.sp,
                                                 ),
                                               ),
                                               Text(
                                                 '%',
-                                                style:
-                                                    TextStyle(fontSize: AppSize.s10.sp),
+                                                style: TextStyle(
+                                                    fontSize: AppSize.s10.sp),
                                               )
                                             ],
                                           ),
@@ -339,7 +303,8 @@ class _DailyTasksState extends State<DailyTasks> {
                                           circularStrokeCap:
                                               CircularStrokeCap.round,
                                           animation: true,
-                                          animationDuration: AppConstants.circularPercentIndicator,
+                                          animationDuration: AppConstants
+                                              .circularPercentIndicator,
                                           curve: Curves.easeInOut,
                                         )
                                       ],
@@ -356,8 +321,9 @@ class _DailyTasksState extends State<DailyTasks> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Bounceable(
-                                        duration:
-                                            Duration(milliseconds: AppConstants.durationOfBounceable),
+                                        duration: Duration(
+                                            milliseconds: AppConstants
+                                                .durationOfBounceable),
                                         onTap: () async {
                                           await Future.delayed(const Duration(
                                               milliseconds: 200));
@@ -374,7 +340,8 @@ class _DailyTasksState extends State<DailyTasks> {
                                 ),
                               )
                             : Padding(
-                                padding: const EdgeInsets.only(right: AppPadding.p15),
+                                padding: const EdgeInsets.only(
+                                    right: AppPadding.p15),
                                 child: Container(),
                               )
                       ],
@@ -386,6 +353,4 @@ class _DailyTasksState extends State<DailyTasks> {
       ),
     );
   }
-
-
 }

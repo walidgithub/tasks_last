@@ -10,7 +10,6 @@ abstract class TaskRepository {
   Future<void> deleteTask(int taskId);
   Future<void> updateOldTask(DailyTaskModel dailyTaskModel, int taskId);
   Future<void> toggleDone(MakeTaskDoneModel makeItDone, int taskId);
-  Future<void> saveCounterVal(SaveCounterValModel saveCounterVal, int taskId);
   Future<List<String>> getTasksNames();
   Future<List<String>> getAllCategories();
   Future<DailyTaskModel> showTask(int taskId);

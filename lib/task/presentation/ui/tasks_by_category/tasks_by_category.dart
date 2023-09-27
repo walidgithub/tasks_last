@@ -41,8 +41,8 @@ class _TasksByCategoryState extends State<TasksByCategory> {
     }
   }
 
-  Future<void> executeToggleDone(BuildContext context, int index) async {
-    _toggleDone(_done);
+  Future<void> executeToggleDone(BuildContext context, int index, int done) async {
+    _toggleDone(done);
 
     String dayOfToday = DateFormat('EEEE').format(today);
     String dayOfWeekOfToday = dayOfToday.substring(0, 3);
@@ -184,7 +184,6 @@ class _TasksByCategoryState extends State<TasksByCategory> {
               content: Text(AppStrings.successfullyDeleted.tr()),
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
             if (loadedTasks.isEmpty) {
               Navigator.of(context).pushReplacementNamed(Routes.mainRoute);
             }
@@ -203,8 +202,7 @@ class _TasksByCategoryState extends State<TasksByCategory> {
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (BuildContext context, int index) {
-                        _done = loadedTasks[index]['done'];
-
+                        // _done = loadedTasks[index]['done'];
                         return Slidable(
                           key: ValueKey(loadedTasks[index]),
                           startActionPane: ActionPane(
@@ -223,7 +221,7 @@ class _TasksByCategoryState extends State<TasksByCategory> {
                                       ? const SizedBox.shrink()
                                       : SlidableAction(
                                           onPressed: (context) =>
-                                              executeToggleDone(context, index),
+                                              executeToggleDone(context, index, loadedTasks[index]['done']),
                                           flex: 2,
                                           backgroundColor:
                                               ColorManager.lightPrimary,
@@ -235,7 +233,7 @@ class _TasksByCategoryState extends State<TasksByCategory> {
                                         )
                                   : SlidableAction(
                                       onPressed: (context) =>
-                                          executeToggleDone(context, index),
+                                          executeToggleDone(context, index, loadedTasks[index]['done']),
                                       flex: 2,
                                       backgroundColor:
                                           ColorManager.lightPrimary,
@@ -279,6 +277,7 @@ class _TasksByCategoryState extends State<TasksByCategory> {
                               nestedVal: loadedTasks[index]['nestedVal'],
                               nested: loadedTasks[index]['nested'],
                               counterVal: loadedTasks[index]['counterVal'],
+                              wheelOrCounterVal: loadedTasks[index]['wheelOrCounterVal'],
                               counter: loadedTasks[index]['counter'],
                               description: loadedTasks[index]['description'],
                               taskName: loadedTasks[index]['taskName'],
@@ -287,6 +286,9 @@ class _TasksByCategoryState extends State<TasksByCategory> {
                               done: loadedTasks[index]['done'],
                               pinned: loadedTasks[index]['pinned'],
                               date: widget.arguments.tasksDate,
+                              // toggleDone: () {
+                              //   executeToggleDone(context, index);
+                              // },
                             ),
                           ),
                         );

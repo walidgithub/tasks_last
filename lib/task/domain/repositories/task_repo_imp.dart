@@ -37,11 +37,6 @@ class TaskRepoImp extends TaskRepository {
   }
 
   @override
-  Future<void> saveCounterVal(SaveCounterValModel saveCounterVal, int taskId) async {
-    await _dbHelper.saveCounterVal(saveCounterVal, taskId);
-  }
-
-  @override
   Future<List<String>> getTasksNames() async {
     final res = await _dbHelper.getAllTasksNames();
     return res;

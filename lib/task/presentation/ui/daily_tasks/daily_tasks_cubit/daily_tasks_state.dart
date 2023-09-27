@@ -46,3 +46,5 @@ class ErrorTaskDayUpdateDoneState extends DailyTasksState{
 
   ErrorTaskDayUpdateDoneState(this.errorText);
 }
+
+class UpdateWheelOrCounterValState extends DailyTasksState{}

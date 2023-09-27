@@ -84,14 +84,6 @@ class DailyTasksCubit extends Cubit<DailyTasksState> {
     }
   }
 
-  Future<void> saveCounterVal(SaveCounterValModel saveCounterVal, int taskId) async {
-    try {
-      await taskRepoImp.saveCounterVal(saveCounterVal, taskId);
-    } catch (e) {
-
-    }
-  }
-
   Future<List<DailyTaskModel>> loadDailyTasksByCategory(
       String category, String date) async {
     final res = await taskRepoImp.loadDailyTasksByCategory(category, date);

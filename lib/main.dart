@@ -109,7 +109,7 @@ class _MyAppState extends State<MyApp> {
                 darkTheme: darkTheme,
                 themeMode: _themeManager.themeMode,
                 onGenerateRoute: RouteGenerator.getRoute,
-                initialRoute: Routes.splashRoute,
+                initialRoute: Routes.mainRoute,
               ));
         });
   }

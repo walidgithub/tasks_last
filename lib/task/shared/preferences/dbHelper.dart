@@ -25,7 +25,7 @@ class DbHelper {
   Future<Database> initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    return await openDatabase(path, version: 1, onCreate: createDB);
+    return await openDatabase(path, version: 2, onCreate: createDB,onUpgrade: onUpgrade);
   }
 
   Future createDB(Database db, int version) async {
@@ -43,6 +43,12 @@ class DbHelper {
 
     await db.execute(
         'create table notificationsByDayOfWeek(id integer primary key autoincrement, title varchar(15), body varchar(255), dayOfWeek varchar(15), notifyHour integer, notifyMinute integer, taskId integer, notificationUniqueId integer)');
+  }
+
+  Future onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < newVersion) {
+      await db.execute('alter table tasks add column wheelOrCounterVal integer');
+    }
   }
 
   // Task Operations----------------------------------------------------------------------------------------
@@ -75,17 +81,6 @@ class DbHelper {
 
     return db
         .update('tasks', makeItTask.toMap(), where: 'id = ?', whereArgs: [id]);
-  }
-
-  Future<int> saveCounterVal(SaveCounterValModel saveCounterVal, int id) async {
-    if (_db == null) {
-      await initDB(dbdName);
-    }
-
-    final db = _db!.database;
-
-    return db
-        .update('tasks', saveCounterVal.toMap(), where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> deleteTask(int id) async {
@@ -188,15 +183,31 @@ class DbHelper {
 
     int tasksCount = task.length + pinnedTask.length;
 
+    print('111111111');
+    print(tasksCount);
+
     var done = await db.rawQuery(
         'SELECT * FROM tasks where category = ? and date = ? and done = ? and pinned == 0',
         [category, date, doneTask]);
+
+    print('done 2222');
+    print(done.length);
 
     var pinnedDone = await db.rawQuery(
         'SELECT * FROM taskdays where category = ? and nameOfDay = ? and done = ? and date = ?',
         [category, day, doneTask, date]);
 
+    print(category);
+    print(day);
+    print(doneTask);
+    print(date);
+    print('done 33333');
+    print(pinnedDone.length);
+
     int doneTasksCount = done.length + pinnedDone.length;
+
+    print('all done 44444');
+    print(doneTasksCount);
 
     double percent = (doneTasksCount / tasksCount) * 100;
 
