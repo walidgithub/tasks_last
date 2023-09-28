@@ -68,8 +68,8 @@ class TaskRepoImp extends TaskRepository {
   }
 
   @override
-  Future<double> getPercentForHome(String date) async {
-    final res = await _dbHelper.getHomePercent(date);
+  Future<double> getPercentForHome(String date, String day) async {
+    final res = await _dbHelper.getHomePercent(date, day);
     return res;
   }
 

@@ -50,10 +50,8 @@ class _HomePageViewState extends State<HomePageView> {
     String originalDate =
         DateTime.parse(today.toString().split(" ")[0]).toString();
     searchByToday = originalDate.replaceFirst(RegExp(' '), 'T');
-
     String dayOfToday = DateFormat('EEEE').format(today);
     searchByDayOfWeek = dayOfToday.substring(0, 3);
-
     super.initState();
   }
 
@@ -85,11 +83,11 @@ class _HomePageViewState extends State<HomePageView> {
   Widget bodyContent(Size size) {
     return BlocProvider(
   create: (context) => sl<HomeCubit>()
-    ..loadTasksCategories(searchByToday, searchByDayOfWeek)
-    ..loadTotalTasksPercent(searchByToday)
     ..updateDailyDateOfTaskDay(
         searchByDayOfWeek, searchByToday)
-    ..updateDoneForWeekOfTaskDay(searchByDayOfWeek, searchByToday),
+    ..updateDoneForWeekOfTaskDay(searchByDayOfWeek, searchByToday)
+    ..loadTasksCategories(searchByToday, searchByDayOfWeek)
+    ..loadTotalTasksPercent(searchByToday, searchByDayOfWeek),
   child: BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) {
         if (state is LoadingCategoriesState) {
@@ -246,7 +244,7 @@ class _HomePageViewState extends State<HomePageView> {
                           .loadTasksCategories(searchByDay, subOfDayOfToday);
 
                       HomeCubit.get(context)
-                          .loadTotalTasksPercent(searchByDay);
+                          .loadTotalTasksPercent(searchByDay, subOfDayOfToday);
                     });
                   },
                 ),

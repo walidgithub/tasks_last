@@ -404,27 +404,27 @@ class _AddTaskState extends State<AddTask> {
                                       .addTaskDay(taskDays);
                                 }
 
-                                if (notifyMe) {
-                                  NotificationDayOfWeekAndTime notificationData =
-                                      NotificationDayOfWeekAndTime(
-                                          dayOfTheWeek: selectedDay['dayNum'],
-                                          timeOfDay: _timeOfDay);
-
-                                  await NotificationService
-                                      .showDayOfWeekAndTimeNotification(
-                                          notificationId: 1500,
-                                          notificationSchedule: notificationData,
-                                          title: _taskNameEditingController.text,
-                                          body:
-                                              _descriptionEditingController.text,
-                                          scheduled: true,
-                                          actionButtons: [
-                                        NotificationActionButton(
-                                          key: 'Open_Tasks_App',
-                                          label: AppStrings.openTasksApp,
-                                        )
-                                      ]);
-                                }
+                                // if (notifyMe) {
+                                //   NotificationDayOfWeekAndTime notificationData =
+                                //       NotificationDayOfWeekAndTime(
+                                //           dayOfTheWeek: selectedDay['dayNum'],
+                                //           timeOfDay: _timeOfDay);
+                                //
+                                //   await NotificationService
+                                //       .showDayOfWeekAndTimeNotification(
+                                //           notificationId: 1500,
+                                //           notificationSchedule: notificationData,
+                                //           title: _taskNameEditingController.text,
+                                //           body:
+                                //               _descriptionEditingController.text,
+                                //           scheduled: true,
+                                //           actionButtons: [
+                                //         NotificationActionButton(
+                                //           key: 'Open_Tasks_App',
+                                //           label: AppStrings.openTasksApp,
+                                //         )
+                                //       ]);
+                                // }
                               }
                               Navigator.of(context)
                                   .pushReplacementNamed(Routes.mainRoute);

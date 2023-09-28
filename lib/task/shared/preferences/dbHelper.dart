@@ -167,6 +167,8 @@ class DbHelper {
 
   Future<double> getCategoriesPercent(String category, String date, String day,
       [int doneTask = 1]) async {
+print(date);
+print('dateeeeee');
     if (_db == null) {
       await initDB(dbdName);
     }
@@ -174,47 +176,45 @@ class DbHelper {
     final db = _db!.database;
 
     var task = await db.rawQuery(
-        'SELECT * FROM tasks where category = ? and date = ? and pinned == 0',
+        'SELECT * FROM tasks where category = ? and date = ? and pinned = 0',
         [category, date]);
 
+    print(task.length);
+
     var pinnedTask = await db.rawQuery(
-        'SELECT * FROM taskdays where category = ? and nameOfDay = ?',
-        [category, day]);
+        'SELECT * FROM taskdays where category = ? and nameOfDay = ? and date = ?',
+        [category, day, date]);
+
+    print(pinnedTask.length);
 
     int tasksCount = task.length + pinnedTask.length;
 
-    print('111111111');
     print(tasksCount);
 
     var done = await db.rawQuery(
-        'SELECT * FROM tasks where category = ? and date = ? and done = ? and pinned == 0',
+        'SELECT * FROM tasks where category = ? and date = ? and done = ? and pinned = 0',
         [category, date, doneTask]);
 
-    print('done 2222');
     print(done.length);
 
     var pinnedDone = await db.rawQuery(
         'SELECT * FROM taskdays where category = ? and nameOfDay = ? and done = ? and date = ?',
         [category, day, doneTask, date]);
 
-    print(category);
-    print(day);
-    print(doneTask);
-    print(date);
-    print('done 33333');
     print(pinnedDone.length);
 
     int doneTasksCount = done.length + pinnedDone.length;
-
-    print('all done 44444');
     print(doneTasksCount);
 
     double percent = (doneTasksCount / tasksCount) * 100;
 
+    print(percent);
+    print('hereeeeee');
+
     return percent;
   }
 
-  Future<double> getHomePercent(String date, [int doneTask = 1]) async {
+  Future<double> getHomePercent(String date, String day, [int doneTask = 1]) async {
     if (_db == null) {
       await initDB(dbdName);
     }
@@ -224,7 +224,7 @@ class DbHelper {
     var task = await db.rawQuery('SELECT * FROM tasks where date = ?', [date]);
 
     var pinnedTask =
-        await db.rawQuery('SELECT * FROM taskdays where date = ?', [date]);
+        await db.rawQuery('SELECT * FROM taskdays where nameOfDay = ? and date = ?', [day, date]);
 
     int tasksCount = task.length + pinnedTask.length;
 
@@ -236,7 +236,7 @@ class DbHelper {
         'SELECT * FROM tasks where date = ? and done = ?', [date, doneTask]);
 
     var pinnedDone = await db.rawQuery(
-        'SELECT * FROM taskdays where date = ? and done = ?', [date, doneTask]);
+        'SELECT * FROM taskdays where nameOfDay = ? and done = ? and date = ?', [day, doneTask, date]);
 
     int doneTasksCount = done.length + pinnedDone.length;
 

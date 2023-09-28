@@ -116,9 +116,6 @@ class _DailyTasksState extends State<DailyTasks> {
                                               setState(() {
                                                 if (widget.arguments.counterVal! > 0 && widget.arguments.done == 0) {
                                                   widget.arguments.counterVal = widget.arguments.counterVal! - 1;
-                                                  // if (widget.arguments.counterVal == 0) {
-                                                  //   widget.arguments.toggleDone!();
-                                                  // }
                                                 }
                                               });
                                             },

@@ -55,7 +55,6 @@ class HomeCubit extends Cubit<HomeState> {
           });
         }
       });
-
       emit(LoadedCategoriesState());
     } catch (e) {
       emit(ErrorLoadingCategoriesState(e.toString()));
@@ -68,10 +67,13 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> updateDailyDateOfTaskDay(String day, String date) async {
+    print('new dateeeeeeee');
+    print(date);
     final allIds = await taskRepoImp.getAllIdsOfTaskDay(day);
     for (var idIndex in allIds) {
-      final res = await taskRepoImp.updateDailyDateOfTaskDay(UpdateDailyDateOfTaskDay(id: idIndex.id!, date: date), idIndex.id!, day);
-      return res;
+      print(idIndex.id!);
+      print('iddddddd');
+      await taskRepoImp.updateDailyDateOfTaskDay(UpdateDailyDateOfTaskDay(id: idIndex.id!, date: date), idIndex.id!, day);
     }
   }
 
@@ -95,9 +97,9 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   // Total percent-----------------------------------------------------------------------------
-  Future<void> loadTotalTasksPercent(String date) async {
+  Future<void> loadTotalTasksPercent(String date, String day) async {
     try{
-      await getHomePercent(date).then((value) {
+      await getHomePercent(date, day).then((value) {
         totalPercent = value;
       });
 
@@ -107,9 +109,9 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  Future<double> getHomePercent(String date) async {
+  Future<double> getHomePercent(String date, String day) async {
     final homePercent =
-    await taskRepoImp.getPercentForHome(date);
+    await taskRepoImp.getPercentForHome(date, day);
     return homePercent;
   }
 

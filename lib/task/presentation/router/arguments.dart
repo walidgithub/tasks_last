@@ -37,7 +37,6 @@ class DailyTasksArguments {
   int? counterVal;
   int? wheelOrCounterVal;
   String? date;
-  Function? toggleDone;
 
   DailyTasksArguments({
     this.id,
@@ -54,6 +53,5 @@ class DailyTasksArguments {
     this.counterVal,
     this.wheelOrCounterVal,
     this.date,
-    this.toggleDone,
   });
 }

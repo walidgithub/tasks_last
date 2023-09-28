@@ -17,7 +17,7 @@ abstract class TaskRepository {
   // Home -----------------------------------------------------------------------
   Future<List<String>> getDailyCategories(String date);
   Future<double> getPercentForCategory(String category, String date, String day);
-  Future<double> getPercentForHome(String date);
+  Future<double> getPercentForHome(String date, String day);
   Future<int> getItemsCountInCategory(String category, String date);
 
   // Daily Tasks -----------------------------------------------------------------------
