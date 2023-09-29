@@ -5,6 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:daily_tasks/task/domain/entities/first_load.dart';
 import 'package:daily_tasks/task/domain/entities/task_days_model.dart';
 import '../../domain/entities/daily_task_model.dart';
+import '../../domain/entities/report_model.dart';
 
 class DbHelper {
   Database? _db;
@@ -25,7 +26,7 @@ class DbHelper {
   Future<Database> initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    return await openDatabase(path, version: 2, onCreate: createDB,onUpgrade: onUpgrade);
+    return await openDatabase(path, version: 3, onCreate: createDB,onUpgrade: onUpgrade);
   }
 
   Future createDB(Database db, int version) async {
@@ -47,7 +48,8 @@ class DbHelper {
 
   Future onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < newVersion) {
-      await db.execute('alter table tasks add column wheelOrCounterVal integer');
+      await db.execute(
+          'create table reports(id integer primary key autoincrement, taskName varchar(15), description varchar(255), category varchar(15), date TEXT NOT NULL, done integer not null)');
     }
   }
 
@@ -167,8 +169,7 @@ class DbHelper {
 
   Future<double> getCategoriesPercent(String category, String date, String day,
       [int doneTask = 1]) async {
-print(date);
-print('dateeeeee');
+
     if (_db == null) {
       await initDB(dbdName);
     }
@@ -179,42 +180,30 @@ print('dateeeeee');
         'SELECT * FROM tasks where category = ? and date = ? and pinned = 0',
         [category, date]);
 
-    print(task.length);
-
     var pinnedTask = await db.rawQuery(
         'SELECT * FROM taskdays where category = ? and nameOfDay = ? and date = ?',
         [category, day, date]);
 
-    print(pinnedTask.length);
-
     int tasksCount = task.length + pinnedTask.length;
-
-    print(tasksCount);
 
     var done = await db.rawQuery(
         'SELECT * FROM tasks where category = ? and date = ? and done = ? and pinned = 0',
         [category, date, doneTask]);
 
-    print(done.length);
-
     var pinnedDone = await db.rawQuery(
         'SELECT * FROM taskdays where category = ? and nameOfDay = ? and done = ? and date = ?',
         [category, day, doneTask, date]);
 
-    print(pinnedDone.length);
-
     int doneTasksCount = done.length + pinnedDone.length;
-    print(doneTasksCount);
 
     double percent = (doneTasksCount / tasksCount) * 100;
-
-    print(percent);
-    print('hereeeeee');
 
     return percent;
   }
 
   Future<double> getHomePercent(String date, String day, [int doneTask = 1]) async {
+    print(date);
+    print('first dateee');
     if (_db == null) {
       await initDB(dbdName);
     }
@@ -258,6 +247,65 @@ print('dateeeeee');
         [date, category]);
 
     return result.map((map) => DailyTaskModel.fromMap(map)).toList();
+  }
+
+  // Reports
+  Future<void> closeDay(String date) async {
+    if (_db == null) {
+      await initDB(dbdName);
+    }
+    final db = _db!.database;
+    await db.rawQuery('INSERT INTO reports (`id`, `taskName`, `description`, `category`, `date`, `done`) SELECT `id`, `taskName`, `description`, `category`, `date`, `done` FROM tasks where date = ?',
+        [date.split(" ")[0]]);
+  }
+
+
+  Future<int> deleteClosedDay(String date) async {
+    print(date);
+    print('dateeeee');
+    if (_db == null) {
+      await initDB(dbdName);
+    }
+    final db = _db!.database;
+    return db
+        .delete('reports', where: 'date = ?', whereArgs: [date]);
+  }
+
+  Future<double> loadTotalReportRowPercent(String date, [int doneTask = 1]) async {
+    if (_db == null) {
+      await initDB(dbdName);
+    }
+
+    final db = _db!.database;
+
+    var task = await db.rawQuery('SELECT * FROM reports where date = ?', [date]);
+
+    int tasksCount = task.length;
+
+    if (tasksCount == 0) {
+      return 0;
+    }
+
+    var done = await db.rawQuery(
+        'SELECT * FROM reports where date = ? and done = ?', [date, doneTask]);
+
+    int doneTasksCount = done.length;
+
+    double percent = (doneTasksCount / tasksCount) * 100;
+
+    return percent;
+  }
+
+  Future<List<ReportModel>> loadDailyTasksByDate() async {
+    if (_db == null) {
+      await initDB(dbdName);
+    }
+
+    final db = _db!.database;
+    final result = await db.rawQuery(
+        'SELECT * FROM reports');
+
+    return result.map((map) => ReportModel.fromMap(map)).toList();
   }
 
   //  TaskDays ----------------------------------------------------------------------------------------

@@ -470,21 +470,21 @@ class _AddTaskState extends State<AddTask> {
                               await AddTaskCubit.get(context)
                                   .addNewTask(dailyModel);
 
-                              if (notifyMe) {
-                                NotificationByDate notificationByDateModel =
-                                    NotificationByDate(
-                                        id: null,
-                                        body: _descriptionEditingController.text,
-                                        title: _taskNameEditingController.text,
-                                        taskId: DbHelper.insertedNewTaskId,
-                                        notificationUniqueId: 1500,
-                                        notifyDay: today.day,
-                                        notifyMonth: today.month,
-                                        notifyYear: today.year);
-                                await AddTaskCubit.get(context)
-                                    .createNotificationByDate(
-                                        notificationByDateModel);
-                              }
+                              // if (notifyMe) {
+                              //   NotificationByDate notificationByDateModel =
+                              //       NotificationByDate(
+                              //           id: null,
+                              //           body: _descriptionEditingController.text,
+                              //           title: _taskNameEditingController.text,
+                              //           taskId: DbHelper.insertedNewTaskId,
+                              //           notificationUniqueId: 1500,
+                              //           notifyDay: today.day,
+                              //           notifyMonth: today.month,
+                              //           notifyYear: today.year);
+                              //   await AddTaskCubit.get(context)
+                              //       .createNotificationByDate(
+                              //           notificationByDateModel);
+                              // }
 
                               Navigator.of(context)
                                   .pushReplacementNamed(Routes.mainRoute);

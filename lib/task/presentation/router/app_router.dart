@@ -1,3 +1,4 @@
+import 'package:daily_tasks/task/presentation/ui/homepage/reports/reports_view.dart';
 import 'package:flutter/material.dart';
 import 'package:daily_tasks/task/presentation/ui/add_task/add_task.dart';
 import 'package:daily_tasks/task/presentation/ui/daily_tasks/daily_tasks.dart';
@@ -19,6 +20,7 @@ class Routes {
   static const String tasksByCategory = "/tasksByCategory";
   static const String dailyTasks = "/dailyTasks";
   static const String settings = "/settings";
+  static const String reports = "/reports";
 }
 
 class RouteGenerator {
@@ -38,6 +40,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => DailyTasks(arguments: settings.arguments as DailyTasksArguments));
       case Routes.settings:
         return MaterialPageRoute(builder: (_) => const SettingsView());
+      case Routes.reports:
+        return MaterialPageRoute(builder: (_) => const ReportsView());
       default:
         return unDefinedRoute();
     }

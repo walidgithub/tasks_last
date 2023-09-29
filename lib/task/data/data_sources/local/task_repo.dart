@@ -2,6 +2,7 @@ import '../../../domain/entities/daily_task_model.dart';
 import '../../../domain/entities/first_load.dart';
 import '../../../domain/entities/notification_by_date_model.dart';
 import '../../../domain/entities/notification_by_day_of_week_model.dart';
+import '../../../domain/entities/report_model.dart';
 import '../../../domain/entities/task_days_model.dart';
 
 abstract class TaskRepository {
@@ -23,6 +24,12 @@ abstract class TaskRepository {
   // Daily Tasks -----------------------------------------------------------------------
   Future<List<DailyTaskModel>> loadDailyTasksByCategory(
       String category, String date);
+
+  // Reports -----------------------------------------------------------------------
+  Future<double> loadTotalReportRowPercent(String date);
+  Future<void> closeDay(String date);
+  Future<void> deleteClosedDay(String date);
+  Future<List<ReportModel>> loadDailyTasksByDate();
 
   // Task Days -----------------------------------------------------------------------
   Future<void> addTaskDay(TaskDaysModel taskDays);

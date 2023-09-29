@@ -6,6 +6,7 @@ import 'package:daily_tasks/task/domain/entities/task_days_model.dart';
 import '../../data/data_sources/local/task_repo.dart';
 import '../../shared/preferences/dbHelper.dart';
 import '../entities/daily_task_model.dart';
+import '../entities/report_model.dart';
 
 class TaskRepoImp extends TaskRepository {
   final DbHelper _dbHelper;
@@ -62,7 +63,8 @@ class TaskRepoImp extends TaskRepository {
   }
 
   @override
-  Future<double> getPercentForCategory(String category, String date, String day) async {
+  Future<double> getPercentForCategory(
+      String category, String date, String day) async {
     final res = await _dbHelper.getCategoriesPercent(category, date, day);
     return res;
   }
@@ -84,6 +86,29 @@ class TaskRepoImp extends TaskRepository {
   Future<List<DailyTaskModel>> loadDailyTasksByCategory(
       String category, String date) async {
     final res = await _dbHelper.loadDailyTasksByCategory(category, date);
+    return res;
+  }
+
+  // Reports -----------------------------------------------------------------------
+  @override
+  Future<void> closeDay(String date) async {
+    await _dbHelper.closeDay(date);
+  }
+
+  @override
+  Future<void> deleteClosedDay(String date) async {
+    await _dbHelper.deleteClosedDay(date);
+  }
+
+  @override
+  Future<double> loadTotalReportRowPercent(String date) async {
+    final res = await _dbHelper.loadTotalReportRowPercent(date);
+    return res;
+  }
+
+  @override
+  Future<List<ReportModel>> loadDailyTasksByDate() async {
+    final res = await _dbHelper.loadDailyTasksByDate();
     return res;
   }
 
@@ -118,7 +143,8 @@ class TaskRepoImp extends TaskRepository {
   }
 
   @override
-  Future<List<TaskDaysModel>> loadPinnedTasksByCategoryAndDay(String category, String day) async {
+  Future<List<TaskDaysModel>> loadPinnedTasksByCategoryAndDay(
+      String category, String day) async {
     final res = await _dbHelper.loadPinnedTasksByCategoryAndDay(category, day);
     return res;
   }
@@ -178,14 +204,14 @@ class TaskRepoImp extends TaskRepository {
   }
 
   @override
-  Future<void> updateFirstLoad(
-      UpdateFirstLoad updateFirstLoad, int id) async {
+  Future<void> updateFirstLoad(UpdateFirstLoad updateFirstLoad, int id) async {
     await _dbHelper.updateFirstLoad(updateFirstLoad, id);
   }
 
   // Notification By Date -----------------------------------------------------------------------
   @override
-  Future<void> createNotificationByDate(NotificationByDate notificationByDate) async {
+  Future<void> createNotificationByDate(
+      NotificationByDate notificationByDate) async {
     await _dbHelper.createNotificationByDate(notificationByDate);
   }
 
@@ -202,12 +228,14 @@ class TaskRepoImp extends TaskRepository {
 
   // Notification By Day Of Week -----------------------------------------------------------------------
   @override
-  Future<void> createNotificationByDayOfWeek(NotificationByDayOfWeek notificationByDayOfWeek) async {
+  Future<void> createNotificationByDayOfWeek(
+      NotificationByDayOfWeek notificationByDayOfWeek) async {
     await _dbHelper.createNotificationByDayOfWeek(notificationByDayOfWeek);
   }
 
   @override
-  Future<NotificationByDayOfWeek> showNotificationByDayOfWeek(int taskId) async {
+  Future<NotificationByDayOfWeek> showNotificationByDayOfWeek(
+      int taskId) async {
     final res = await _dbHelper.showNotificationByDayOfWeek(taskId);
     return res;
   }
@@ -218,5 +246,4 @@ class TaskRepoImp extends TaskRepository {
   }
 
   // Others --------------------------------------------------------------------------
-
 }

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
-import 'package:daily_tasks/task/shared/constant/constant_values_manager.dart';
 import 'package:daily_tasks/task/shared/constant/padding_margin_values_manager.dart';
 
-import '../../presentation/router/app_router.dart';
-import '../constant/assets_manager.dart';
-import '../constant/strings_manager.dart';
-import '../style/colors_manager.dart';
+import '../../../presentation/router/app_router.dart';
+import '../../../shared/constant/assets_manager.dart';
+import '../../../shared/constant/strings_manager.dart';
+import '../../../shared/style/colors_manager.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -62,7 +61,7 @@ class _NavBarState extends State<NavBar> {
             title: const Text(AppStrings.allreports,
                 style: TextStyle(fontSize: AppSize.s15)),
             onTap: () {
-              Navigator.of(context).pushNamed(Routes.settings);
+              Navigator.of(context).pushNamed(Routes.reports);
             },
           ),
           const Divider(),

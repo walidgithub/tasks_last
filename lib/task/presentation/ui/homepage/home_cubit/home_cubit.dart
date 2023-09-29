@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/entities/daily_task_model.dart';
 import '../../../../domain/entities/first_load.dart';
+import '../../../../domain/entities/report_model.dart';
 import '../../../../domain/entities/task_days_model.dart';
 import '../../../../domain/repositories/task_repo_imp.dart';
 import '../../../../shared/preferences/dbHelper.dart';
@@ -24,7 +25,10 @@ class HomeCubit extends Cubit<HomeState> {
   List<int> itemsCount = [];
   List<int> pinnedItemsCount = [];
 
+  List<ReportModel> listForReport = [];
+
   double totalPercent = 0.0;
+  double totalReportRowPercent = 0.0;
 
   // -----------------------------------------------------------------------------
   Future<void> loadTasksCategories(String date, String day) async {
@@ -38,7 +42,7 @@ class HomeCubit extends Cubit<HomeState> {
         categories = allDailyCategories.toSet();
 
         await loadPinnedByCategoryDay(day).then((allPinnedCategory) async {
-            categories.addAll(allPinnedCategory);
+          categories.addAll(allPinnedCategory);
         });
 
         for (var category in categories) {
@@ -67,29 +71,34 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> updateDailyDateOfTaskDay(String day, String date) async {
-    print('new dateeeeeeee');
-    print(date);
     final allIds = await taskRepoImp.getAllIdsOfTaskDay(day);
     for (var idIndex in allIds) {
-      print(idIndex.id!);
-      print('iddddddd');
-      await taskRepoImp.updateDailyDateOfTaskDay(UpdateDailyDateOfTaskDay(id: idIndex.id!, date: date), idIndex.id!, day);
+      await taskRepoImp.updateDailyDateOfTaskDay(
+          UpdateDailyDateOfTaskDay(id: idIndex.id!, date: date),
+          idIndex.id!,
+          day);
     }
   }
 
   Future<void> updateDoneForWeekOfTaskDay(String day, String date) async {
     if (day == 'Mon') {
-      await taskRepoImp.addFirstLoadRow(FirstLoad(date: DateTime.parse(date), reloaded: 0));
+      await taskRepoImp
+          .addFirstLoadRow(FirstLoad(date: DateTime.parse(date), reloaded: 0));
 
       await taskRepoImp.fetchFirstLoad(date).then((value) async {
         if (value.date.toString().replaceFirst(RegExp(' '), 'T') == date) {
           if (value.reloaded != 1) {
             final allIds = await taskRepoImp.getAllIdsOfTaskDay(day);
             for (var idIndex in allIds) {
-              await taskRepoImp.updateDoneForWeekOfTaskDay(MakeTaskDoneByDayModel(id: idIndex.id!, done: 0), idIndex.id!);
-              await taskRepoImp.updateDoneForWeekOfTasks(MakeTaskDoneModel(id: idIndex.mainTaskId!, done: 0), idIndex.mainTaskId!);
+              await taskRepoImp.updateDoneForWeekOfTaskDay(
+                  MakeTaskDoneByDayModel(id: idIndex.id!, done: 0),
+                  idIndex.id!);
+              await taskRepoImp.updateDoneForWeekOfTasks(
+                  MakeTaskDoneModel(id: idIndex.mainTaskId!, done: 0),
+                  idIndex.mainTaskId!);
             }
-          await taskRepoImp.updateFirstLoad(UpdateFirstLoad(id: value.id, reloaded: 1), value.id!);
+            await taskRepoImp.updateFirstLoad(
+                UpdateFirstLoad(id: value.id, reloaded: 1), value.id!);
           }
         }
       });
@@ -98,25 +107,25 @@ class HomeCubit extends Cubit<HomeState> {
 
   // Total percent-----------------------------------------------------------------------------
   Future<void> loadTotalTasksPercent(String date, String day) async {
-    try{
+    try {
       await getHomePercent(date, day).then((value) {
         totalPercent = value;
       });
 
       emit(LoadHomePercentState());
-    }catch(e){
+    } catch (e) {
       emit(ErrorLoadingHomePercentState(e.toString()));
     }
   }
 
   Future<double> getHomePercent(String date, String day) async {
-    final homePercent =
-    await taskRepoImp.getPercentForHome(date, day);
+    final homePercent = await taskRepoImp.getPercentForHome(date, day);
     return homePercent;
   }
 
   // Category percent-----------------------------------------------------------------------------
-  Future<double> getCategoryPercent(String category, String date, String day) async {
+  Future<double> getCategoryPercent(
+      String category, String date, String day) async {
     final categoryPercent =
         await taskRepoImp.getPercentForCategory(category, date, day);
     return categoryPercent;
@@ -132,7 +141,7 @@ class HomeCubit extends Cubit<HomeState> {
   // Get count of category's pinned items-----------------------------------------------------------------------------
   Future<int> getPinnedItemsCountInCategory(String category, String day) async {
     final itemsCount =
-    await taskRepoImp.getCountOfCategoryPinnedItems(category, day);
+        await taskRepoImp.getCountOfCategoryPinnedItems(category, day);
     return itemsCount;
   }
 
@@ -141,4 +150,28 @@ class HomeCubit extends Cubit<HomeState> {
     return res;
   }
 
+  // Reports -------------------------------------------------------------
+  Future<void> closeDay(String date) async {
+      await taskRepoImp.closeDay(date);
+      emit(CloseDayState());
+  }
+
+  Future<void> deleteClosedDay(String date) async {
+    await taskRepoImp.deleteClosedDay(date);
+  }
+
+  Future<void> loadTotalReportRowPercent(String date) async {
+    totalReportRowPercent = await taskRepoImp.loadTotalReportRowPercent(date);
+    emit(LoadReportRowPercentState());
+  }
+
+  Future<List<ReportModel>> loadDailyTasksByDate(
+      String firstDate, String toDate) async {
+    final res = await taskRepoImp.loadDailyTasksByDate();
+    listForReport = res;
+    print(listForReport);
+    print('listForReport');
+    emit(LoadReportsState());
+    return res;
+  }
 }

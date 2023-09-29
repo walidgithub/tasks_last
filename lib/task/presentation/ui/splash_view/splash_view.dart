@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:daily_tasks/task/presentation/ui/homepage/homepage_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,14 +9,13 @@ import 'dart:math' as math;
 
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 
-import '../../../../main.dart';
-import '../../../shared/component/splash_clipper.dart';
 import '../../../shared/constant/assets_manager.dart';
 import '../../../shared/constant/constant_values_manager.dart';
 import '../../../shared/constant/strings_manager.dart';
 import '../../../shared/preferences/app_pref.dart';
 import '../../di/di.dart';
 import '../../router/app_router.dart';
+import '../component/splash_clipper.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({Key? key}) : super(key: key);

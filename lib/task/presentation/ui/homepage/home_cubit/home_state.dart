@@ -17,5 +17,15 @@ class ErrorLoadingHomePercentState extends HomeState{
   ErrorLoadingHomePercentState(this.errorText);
 }
 
+class LoadReportRowPercentState extends HomeState{}
+class CloseDayState extends HomeState{}
+
+class LoadReportsState extends HomeState{}
+class ErrorReportsState extends HomeState{
+  String errorText;
+
+  ErrorReportsState(this.errorText);
+}
+
 
 

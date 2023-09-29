@@ -13,13 +13,13 @@ import 'package:daily_tasks/task/shared/constant/assets_manager.dart';
 import 'package:daily_tasks/task/shared/constant/padding_margin_values_manager.dart';
 import '../../../shared/constant/constant_values_manager.dart';
 import '../../../shared/style/colors_manager.dart';
-import '../../../shared/component/home_clipper.dart';
-import '../../../shared/component/nav_bar.dart';
 import '../../../shared/utils/utils.dart';
 import '../../di/di.dart';
 import '../../router/app_router.dart';
 import '../../router/arguments.dart';
 import '../category/category.dart';
+import '../component/home_clipper.dart';
+import '../component/nav_bar.dart';
 
 class HomePageView extends StatefulWidget {
   const HomePageView({Key? key}) : super(key: key);
@@ -34,6 +34,8 @@ class _HomePageViewState extends State<HomePageView> {
   var yearOfDate = DateTime.now().year;
 
   Set<String> dailyCategories = {};
+
+  bool closedDay = false;
 
   List<int> itemsCount = [];
   List<int> pinnedItemsCount = [];
@@ -170,6 +172,42 @@ class _HomePageViewState extends State<HomePageView> {
                             ColorManager.lightPrimary,
                           ]),
                     )),
+                Positioned(
+                    top: 260.h,
+                    left: 145.w,
+                    child: Bounceable(
+                  duration: Duration(
+                      milliseconds: AppConstants.durationOfBounceable),
+                  onTap: () async {
+                    await Future.delayed(Duration(
+                        milliseconds: AppConstants.durationOfDelay));
+                    String originalDate =
+                    DateTime.parse(today.toString().split(" ")[0])
+                        .toString();
+                    String searchByDay = originalDate.replaceFirst(RegExp(' '), 'T');
+                    await HomeCubit.get(context).deleteClosedDay(searchByDay);
+                    await HomeCubit.get(context).closeDay(searchByDay);
+                    setState(() {
+                      closedDay = true;
+                    });
+                  },
+                  child: Container(
+                    height: 30.h,
+                    width: 150.w,
+                    decoration: BoxDecoration(
+                        color: closedDay ? ColorManager.lightPrimary : ColorManager.basic,
+                        border: Border.all(
+                            width: 1.w, color: closedDay ? ColorManager.primary : ColorManager.accent2),
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(10.w))),
+                    child: Center(
+                        child: Text(
+                          closedDay ? 'Good job (Save again)' : 'Done (Save to Report)',
+                          style: TextStyle(
+                              fontSize: 14.sp, color: closedDay ? ColorManager.basic : ColorManager.primary),
+                        )),
+                  ),
+                )),
                 Positioned(
                     top: 15.h,
                     left: 35.w,
